@@ -103,6 +103,7 @@ public class Dot {
 			//Setting Y and X Total Length
 			int totalx = x * 2 + 1;
 			int totaly = y * 2 + 1;
+			int totalx2 = x * 2 + 1;
 			//Real Y and X Numbers
 			int actualx = x * -1;
 			int actualy = y * -1;
@@ -142,7 +143,12 @@ public class Dot {
 							graph[main][i] =Integer.toString(actualx);
 						}
 						else if(actualx == 0) {
-							graph[main][i] = "  " + Integer.toString(actualx);
+							if(totalx2 < 19) {
+								graph[main][i] = " " + Integer.toString(actualx);
+							}
+							else{
+								graph[main][i] = "  " + Integer.toString(actualx);
+							}
 						}
 						else if(actualx > 99) {
 							graph[main][i] = "  " + Integer.toString(actualx);
