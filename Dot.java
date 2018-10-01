@@ -2,6 +2,13 @@ package dotLocator;
 import java.io.*;
 import java.util.Arrays;
 
+// Made By
+//  /===\   ||=====  ||====||  ||====||
+// ||   ||  ||		 ||	  //   ||    ||
+// ||===||  ||==	 ||===     ||    ||
+// ||   ||  ||		 ||	  \\   ||    ||
+// ||   ||  ||=====  ||	   \\  ||====|| & Zero
+
 //System.out.println("");
 
 /*Separating Commas
@@ -30,27 +37,43 @@ import java.util.Arrays;
 /* Updates And Logs
  * 		26.09.2018 (7:00 pm) : BufferedReader Fixed. Program Can Take Input From User
  * 							   More than once. Help Menu ReAdded;
+ * 
  * 		28.09.2018 (3:06 am) : 1) Finally Got Create Graph Function Working But It have Printing
  * 							   Problems... Which i am not going to fix anyway;
- * 							   2) Made Help Menu Look A Little Better
+ * 							   2) Made Help Menu Look A Little Better;
+ * 
  * 		29.09.2018 (11:06 pm) : 1) Improved Printing For x values that are more than 9 & 99
- * 								and that are less than -9 & -99.
- * 									- Program Can Print Much Better Now.
+ * 								and that are less than -9 & -99;
+ * 									- Program Can Print Much Better Now;
  * 								2) Removed "Enter Y Value" entry and Set the y value same
  * 								as the x value. So The Graph now doesn't show null entries
- * 								While Printing.
+ * 								While Printing;
  * 								================ PRINTING IMPROVED 100 % ==================
+ * 		
+ * 		02.10.2018 (1:50 am) : 1) Add Dot Function Is Fully Working (Have some minor bugs :
+ * 							   Prints "X" in place of "-" instead of the whole number when the
+ * 							   value of x axis is 0.);
+ * 							   2) Remove Dot Function is now Working Fine As FUCK !!;
+ * 							   3) Added A Menu For Printing Graph (Menu index No. : 4);
+ * 							   4) Added Some New Empty Lines To Make It Look Pretty;
  */
 
 public class Dot {
+	
+	public static String[][] graph;
+	public static int halfx;
+	public static int halfy;
+	public static int totalx;
+	public static int totaly;
 
 	public static void mainmenu() {
 		System.out.println("Type The Number To Select");
 		System.out.println("1.Creat Graph");
 		System.out.println("2.Add Dot");
 		System.out.println("3.Remove Dot");
-		System.out.println("4.Save File");
-		System.out.println("5.Help");
+		System.out.println("4.Print Graph");
+		System.out.println("5.Save File");
+		System.out.println("6.Help");
 	}
 	
 	public static void mainmenuinput() throws IOException {
@@ -60,7 +83,25 @@ public class Dot {
 		if(Menuin.equals("1")) {
 			creategraph();
 		}
-		else if(Menuin.equals("5")) {
+		else if(Menuin.equals("2")) {
+			adddot();
+		}
+		else if(Menuin.equals("3")) {
+			removedot();
+		}
+		else if(Menuin.equals("4")) {
+			try {
+				print();
+				System.out.println();
+			}catch(Exception e) {
+				System.out.println();
+				System.out.println(" [!] No Graph Has Been Created [!]");
+				System.out.println();
+			}
+			mainmenu();
+			mainmenuinput();
+		}
+		else if(Menuin.equals("6")) {
 			System.out.println("");
 			System.out.println("=================================================");
 			System.out.println("=      Type The Number Of The Thing To Select   =");
@@ -101,30 +142,27 @@ public class Dot {
 			int y = (int)Math.ceil(doubley);
 			
 			//Setting Y and X Total Length
-			int totalx = x * 2 + 1;
-			int totaly = y * 2 + 1;
+			totalx = x * 2 + 1;
+			totaly = y * 2 + 1;
 			int totalx2 = x * 2 + 1;
 			//Real Y and X Numbers
 			int actualx = x * -1;
-			int actualy = y * -1;
+			int actualy = y;
 			int virtualx = x * -1;
 			//Half Of X And Y
-			int halfx = totalx/2;
-			int halfy = totaly/2;
+			halfx = totalx/2;
+			halfy = totaly/2;
 			
-		//printing y and x values
-		System.out.println(x);
-		System.out.println(y);
-		
 		//checking if x and y values are less than 0
 		if(x > 0 && y > 0) {
-			//Array Of y and x
-			String graph[][] = new String[totaly][totalx];
+			
+			graph = new String[totaly][totalx];
 			
 			//Printing Out Stuff
+			System.out.println();
 			System.out.println("===== We Can Proceed =====");
-			System.out.println(x);
-			System.out.println(y);
+			System.out.println("X : " + x);
+			System.out.println("Y : "+ y);
 			System.out.println("Total X : " + totalx);
 			System.out.println("Total Y : " + totaly);
 			System.out.println("Actual X : " + actualx);
@@ -137,12 +175,21 @@ public class Dot {
 			//UPDATE> ITS WORKING NOW
 			//Generating Graph :
 			for(int main = 0; main < totaly; main++) {
+				
+				// This Is For The Main X Axis
 				if(main == halfy) {
+					
+					// Inputing X Values Into Array
 					for(int i = 0; i < totalx;i++) {
+						// For Negative X Axis Value
 						if(actualx < 0) {
 							graph[main][i] =Integer.toString(actualx);
 						}
+						
+						//When X Axis Becomes 0
 						else if(actualx == 0) {
+							
+							// Checks If the X range is bigger than [-9, 9] or not
 							if(totalx2 < 19) {
 								graph[main][i] = " " + Integer.toString(actualx);
 							}
@@ -150,19 +197,27 @@ public class Dot {
 								graph[main][i] = "  " + Integer.toString(actualx);
 							}
 						}
+						
+						// Checks If The Number is More Than 100
 						else if(actualx > 99) {
 							graph[main][i] = "  " + Integer.toString(actualx);
 						}
+						
+						//For Normal Numbers
 						else {
 							graph[main][i] = " " + Integer.toString(actualx);
 						}
 						actualx++;
 					}
-					actualy++;
+					actualy--;
 				}
+				
+				// This Is For Y Axis
 				else {
 					virtualx = x * -1;
 					for(int sub= 0; sub < totaly;sub++) {
+						
+						// Inputing Y Values Into Array
 						if(sub == halfx) {
 							if(actualy < 0) {
 								graph[main][sub] = Integer.toString(actualy) + " ";
@@ -170,8 +225,10 @@ public class Dot {
 							else {
 								graph[main][sub] = " " + Integer.toString(actualy) + " ";
 							}
-							actualy++;
+							actualy--;
 						}
+						
+						// Inputing Dots Into Array
 						else {
 							// I'm A Retard (Just in case if you don't know)
 							if(virtualx <= -9) {
@@ -199,23 +256,107 @@ public class Dot {
 				}
 			}
 			
+			// ======================= END OF THE FOR LOOP ========================
+			
 			//Printing The Graph
-			// %Temp%
-			for(int j = 0; j < totaly; j++) {
-				for(int k = 0; k < totalx; k++) {
-					System.out.print(graph[j][k]);
-				}
-				System.out.println();
-			}
-		
+			print();
 		}
-		else if( x < 0 || y < 0){
-			System.out.println("|!| Enter a Positive Number |!|");
+		
+		// Checks if The Input Number Is Negative (Out Dated)
+		else if( x <= 0 || y <= 0){
+			System.out.println("[!] Enter a Valid Number [!]");
 			creategraph();
 		}
 		
 		//Empty Line For Making It Look Good
 		System.out.println();
+		
+		// Recalling The Main Menu Again
+		mainmenu();
+		mainmenuinput();
+		
+	} // End Of creategraph()
+	
+	public static void print() throws IOException{
+		for(int j = 0; j < totaly; j++) {
+			for(int k = 0; k < totalx; k++) {
+				System.out.print(graph[j][k]);
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void adddot() throws IOException{
+		
+		System.out.println();
+		// Getting X And Y Values
+		System.out.println("Enter The X Value Of The Point : ");
+		BufferedReader dotxinput = new BufferedReader(new InputStreamReader(System.in));
+		int dotx = Integer.parseInt(dotxinput.readLine());
+		System.out.println("Enter The Y Value OF The Point : ");
+		BufferedReader dotyinput = new BufferedReader(new InputStreamReader(System.in));
+		int doty = Integer.parseInt(dotyinput.readLine());
+		
+		try {
+			// Locating String On The Entered X And Y Values
+			String location = graph[halfy - doty][halfx - (dotx * -1)];
+		
+			//Updating Graph
+			char[] update = location.toCharArray();
+			if(dotx == halfx - halfx) {
+				update[new String(update).indexOf(Integer.toString(doty))] = 'X';
+			}
+			else {
+				update[new String(update).indexOf(".")] = 'X';
+			}
+			graph[halfy - doty][halfx - (dotx * -1)] = new String(update);
+			print();
+		
+		}catch(Exception e) {
+			System.out.println();
+			System.out.println("{!} Invalid Point Axis Entered {!}");
+			System.out.println();
+		}
+		System.out.println();
+		mainmenu();
+		mainmenuinput();
+		
+	}
+	
+	public static void removedot() throws IOException{
+		
+		System.out.println();
+		System.out.println("Enter The X Value Of The Point That You Want To Remove : ");
+		BufferedReader dotxinput = new BufferedReader(new InputStreamReader(System.in));
+		int dotx = Integer.parseInt(dotxinput.readLine());
+		System.out.println("Enter The Y Value OF The Point That You Want To Remove : ");
+		BufferedReader dotyinput = new BufferedReader(new InputStreamReader(System.in));
+		int doty = Integer.parseInt(dotyinput.readLine());
+		
+		try {
+			String location = graph[halfy - doty][halfx - (dotx * -1)];
+		
+			//Updating Graph
+			char[] update = location.toCharArray();
+			if(dotx == halfx - halfx) {
+				String lasty = Integer.toString(doty);
+				update[new String(update).indexOf("X")] = lasty.charAt(0);
+			}
+			else {
+				update[new String(update).indexOf("X")] = '.';
+			}
+			
+			graph[halfy - doty][halfx - (dotx * -1)] = new String(update);
+			print();
+			
+		}catch(Exception e) {
+			System.out.println();
+			System.out.println("{!} Invalid Point Axis Entered {!}");
+			System.out.println();
+		}
+		System.out.println();
+		mainmenu();
+		mainmenuinput();
 	}
 	
 	public static void main(String[] args) throws IOException{
